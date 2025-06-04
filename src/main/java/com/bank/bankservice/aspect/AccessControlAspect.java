@@ -14,11 +14,12 @@ import com.bank.bankservice.domain.dto.AccountDto;
 import com.bank.bankservice.domain.dto.Role;
 import com.bank.bankservice.repository.AccountRepository;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Aspect
-@Component
+@Hidden
 @RequiredArgsConstructor
 public class AccessControlAspect {
 
