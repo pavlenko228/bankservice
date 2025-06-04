@@ -21,3 +21,7 @@ server:
 security:
   jwt:
     secret_key: 4eeab38d706831be4b36612ead768ef8182d1dd6f0e14e5dc934652e297fb16a
+logging:
+  level:
+    org.springdoc: DEBUG       # Отдельная строка для SpringDoc
+    org.springframework.web: DEBUG 

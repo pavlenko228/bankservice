@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.bank.bankservice.exception.NoSuchAccount;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
 @ControllerAdvice
 public class AccountControllerAdvice {
 
