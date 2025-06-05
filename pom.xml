@@ -54,6 +54,11 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>java-dotenv</artifactId>
+			<version>5.2.2</version> <!-- Проверьте последнюю версию на Maven Central -->
+		</dependency>
 		
 		<dependency>
 			<groupId>org.postgresql</groupId>

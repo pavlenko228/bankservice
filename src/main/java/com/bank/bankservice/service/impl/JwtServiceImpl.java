@@ -5,19 +5,22 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import com.bank.bankservice.service.contract.JwtService;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+@Service
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${security.jwt.secret_key}")
-    private String secretKey;
+    private final Dotenv dotenv = Dotenv.load();
+    private final String secretKey = dotenv.get("SECRET_KEY"); 
+
 
     @Override
     public boolean isTokenExpired(String token) {

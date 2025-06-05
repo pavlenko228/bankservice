@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: BankAPI
+  datasource: 
+      url: jdbc:postgresql://localhost:5434/BankDB
+      hikari:
+          username: postgres
+          password: postgres
+
+  jpa:
+      hibernate:
+          ddl-auto: create
+      properties:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+
+
+server:
+    port: 8444
+
+
+logging:
+  level:
+    org.springdoc: DEBUG       # Отдельная строка для SpringDoc
+    org.springframework.web: DEBUG 

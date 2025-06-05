@@ -1,13 +1,7 @@
 package com.bank.bankservice.config;
 
 import java.io.IOException;
-import java.util.Base64;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.Filter;
@@ -23,19 +17,13 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 
 import com.bank.bankservice.domain.dto.Role;
+import com.bank.bankservice.service.contract.JwtService;
 
 @Component
 @RequiredArgsConstructor
 public class JwtFilter implements Filter {
 
-    @Value("${security.jwt.secret_key}")
-    private String secretKeyString;
-
-    @Bean
-    public SecretKey secretKey() {
-        byte[] decodedKey = Base64.getDecoder().decode(secretKeyString); 
-        return new SecretKeySpec(decodedKey, 0, decodedKey.length, "HmacSHA256");
-    }
+    private final JwtService jwtService;
 
     @Override
     public void doFilter (@NotNull ServletRequest request,
@@ -51,7 +39,7 @@ public class JwtFilter implements Filter {
             try {
 
                 JwtParser parser = Jwts.parser()
-                        .verifyWith(secretKey())
+                        .verifyWith(jwtService.getSigningKey())
                         .build();
 
                 Claims claims = parser.parseSignedClaims(token).getPayload();
