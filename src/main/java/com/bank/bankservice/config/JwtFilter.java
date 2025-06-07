@@ -1,33 +1,37 @@
 package com.bank.bankservice.config;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.Filter;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 import com.bank.bankservice.domain.dto.Role;
 import com.bank.bankservice.service.contract.JwtService;
 
 @Component
 @RequiredArgsConstructor
-public class JwtFilter implements Filter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
     @Override
-    public void doFilter (@NotNull ServletRequest request,
-                @NotNull ServletResponse response,
+    public void doFilterInternal (@NotNull HttpServletRequest request,
+                @NotNull HttpServletResponse response,
                 @NotNull FilterChain chain)
                 throws IOException, ServletException {
 
