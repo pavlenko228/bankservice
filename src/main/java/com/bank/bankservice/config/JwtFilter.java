@@ -1,16 +1,17 @@
 package com.bank.bankservice.config;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
@@ -18,9 +19,6 @@ import lombok.RequiredArgsConstructor;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-
-import com.bank.bankservice.domain.dto.Role;
 import com.bank.bankservice.service.contract.JwtService;
 
 @Component
@@ -31,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal (@NotNull HttpServletRequest request,
-                @NotNull HttpServletResponse response,
+                @NotNull HttpServletResponse response, 
                 @NotNull FilterChain chain)
                 throws IOException, ServletException {
 
@@ -49,13 +47,22 @@ public class JwtFilter extends OncePerRequestFilter {
                 Claims claims = parser.parseSignedClaims(token).getPayload();
 
                 Long userId = claims.get("id", Long.class);
-                Role role = claims.get("role", Role.class);
+                String role = claims.get("role", String.class);
+
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userId,
+                    null,
+                    List.of(new SimpleGrantedAuthority("ROLE_" + role)) // Преобразуем роль в Authority
+                );
+
+                // Устанавливаем аутентификацию в SecurityContext
+                SecurityContextHolder.getContext().setAuthentication(authToken);
 
                 request.setAttribute("userId", userId);
                 request.setAttribute("role", role);
 
             } catch (Exception e) {
-                response.getWriter().write("Invalid token");
+                response.getWriter().write(e.getMessage());
                 return;
             }
 

@@ -1,6 +1,8 @@
 spring: 
   application:
     name: BankAPI
+  mvc:
+    log-request-details: true
   datasource: 
       url: jdbc:postgresql://localhost:5434/BankDB
       hikari:
@@ -20,5 +22,8 @@ server:
 
 logging:
   level:
-    org.springdoc: DEBUG       # Отдельная строка для SpringDoc
-    org.springframework.web: DEBUG 
+    org.springframework.web: DEBUG       # Логирование Spring MVC
+    org.springframework.security: DEBUG  # Логирование Spring Security
+    com.bank.bankservice: DEBUG          # Логирование вашего приложения
+    org.hibernate.SQL: DEBUG             # Логирование SQL-запросов
+    org.hibernate.type: TRACE  

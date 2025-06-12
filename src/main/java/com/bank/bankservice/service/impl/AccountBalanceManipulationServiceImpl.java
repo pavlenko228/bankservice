@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bank.bankservice.domain.dto.DepositResponse;
+import com.bank.bankservice.domain.dto.TransferRequest;
 import com.bank.bankservice.domain.dto.TransferResponse;
 import com.bank.bankservice.domain.dto.WithdrawResponse;
 import com.bank.bankservice.domain.model.Account;
@@ -61,17 +62,17 @@ public class AccountBalanceManipulationServiceImpl implements AccountBalanceMani
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public TransferResponse transfer(Long sourceMoneyNumber, BigDecimal amount, Long payeeNumber) {
+    public TransferResponse transfer(TransferRequest transferRequest) {
 
-        WithdrawResponse withdrawResponse = withdraw(payeeNumber, amount);
+        WithdrawResponse withdrawResponse = withdraw(transferRequest.getSourceMoneyNumber(), transferRequest.getAmount());
 
         if (withdrawResponse.getSuccess()) {
 
-            DepositResponse depositResponse = deposit(sourceMoneyNumber, amount);
+            DepositResponse depositResponse = deposit(transferRequest.getPayeeNumber(), transferRequest.getAmount());
 
-            return new TransferResponse(true, "The transfer of funds was completed successfully", amount, sourceMoneyNumber, payeeNumber);
+            return new TransferResponse(true, "The transfer of funds was completed successfully", transferRequest.getAmount(), transferRequest.getSourceMoneyNumber(), transferRequest.getPayeeNumber());
         } else {
-            return new TransferResponse(false, withdrawResponse.getMessage(), amount, sourceMoneyNumber, payeeNumber);
+            return new TransferResponse(false, withdrawResponse.getMessage(), transferRequest.getAmount(), transferRequest.getSourceMoneyNumber(), transferRequest.getPayeeNumber());
         }
     }
 
